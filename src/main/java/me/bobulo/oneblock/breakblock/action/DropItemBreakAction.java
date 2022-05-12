@@ -29,7 +29,6 @@ public class DropItemBreakAction extends BreakAction {
         if (world == null)
             return;
 
-        System.out.println(itemStack.getType());
         world.dropItemNaturally(location, itemStack);
     }
 

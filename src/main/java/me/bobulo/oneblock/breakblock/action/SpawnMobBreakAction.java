@@ -1,6 +1,7 @@
 package me.bobulo.oneblock.breakblock.action;
 
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.Setter;
 import lombok.ToString;
 import me.bobulo.oneblock.breakblock.context.BreakContext;
@@ -15,7 +16,7 @@ public class SpawnMobBreakAction extends BreakAction {
 
     private EntityType entityType;
 
-    public SpawnMobBreakAction(double chance, EntityType entityType) {
+    public SpawnMobBreakAction(double chance, @NonNull EntityType entityType) {
         super(chance);
         this.entityType = entityType;
     }

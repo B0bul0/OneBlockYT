@@ -1,1 +1,23 @@
-oneblocks:
+#Tipo do OneBlock
+blockType: GRASS_BLOCK
+
+#Aonde os OneBlock iram aparecer.
+locations:
+  #NomeDoMundo;X;Y;Z
+  - world;0;80;0
+
+phases:
+  1:
+    #Lista de drops ao quebrar o bloco, pode ser itens, mobs...
+    drops:
+      - Item;OAK_WOOD
+      - Item;COBBLESTONE
+
+  2:
+    #Quantidade de blocos necessarios para upar para essa etapa.
+    blocksNeeded: 35
+
+    #Lista de drops ao quebrar o bloco, pode ser itens, mobs...
+    drops:
+      - AllItens
+      - AllMobs
