@@ -1,6 +1,7 @@
 package me.bobulo.oneblock.breakblock;
 
 import lombok.NonNull;
+import me.bobulo.oneblock.OneBlock;
 import me.bobulo.oneblock.breakblock.action.BreakAction;
 import me.bobulo.oneblock.breakblock.context.BreakContext;
 import me.bobulo.oneblock.event.BreakOneBlockEvent;
@@ -44,6 +45,7 @@ public class BreakBlock {
         Validate.isTrue(!this.phasesActions.containsKey(blockPhase.getPhase()), "Essa etapa já existe.");
 
         this.phasesActions.put(blockPhase.getPhase(), blockPhase);
+        OneBlock.getInstance().getLogger().info("Registrando etapa " + blockPhase.getPhase());
     }
 
     public void shuffle() {
@@ -66,6 +68,9 @@ public class BreakBlock {
             throw new RuntimeException("Essa etapa não existe.");
 
         List<BreakAction> breakActions = blockPhase.getBreakActions();
+
+        if (breakActions.isEmpty())
+            throw new RuntimeException("Não tem valores na lista.");
 
         double size = 0;
 

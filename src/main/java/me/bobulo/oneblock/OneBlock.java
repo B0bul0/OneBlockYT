@@ -81,10 +81,12 @@ public class OneBlock extends JavaPlugin {
 
         ConfigurationSection phases = getConfig().createSection("phases");
 
-        for (String key : phases.getKeys(false)) {
-            ConfigurationSection section = phases.createSection(key);
+        for (int i = 1; i < 100; i++) {
+            ConfigurationSection section = phases.getConfigurationSection(String.valueOf(i));
+            if (section == null)
+                continue;
 
-            int phase = Integer.parseInt(key);
+            int phase = i;
             int blocksNeeded = section.getInt("blocksNeeded", 0);
             List<String> drops = section.getStringList("drops");
 
@@ -95,7 +97,8 @@ public class OneBlock extends JavaPlugin {
             for (String drop : drops) {
                 if (drop.equalsIgnoreCase("AllItens")) {
                     registerAllItens(phase);
-                } else if (drop.equalsIgnoreCase("AllMobs")) {
+                }
+                else if (drop.equalsIgnoreCase("AllMobs")) {
                     registerAllMobs(phase);
                 }
                 else if (drop.startsWith("item;")) {

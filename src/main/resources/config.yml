@@ -10,8 +10,8 @@ phases:
   1:
     #Lista de drops ao quebrar o bloco, pode ser itens, mobs...
     drops:
-      - Item;OAK_WOOD
-      - Item;COBBLESTONE
+      - item;OAK_WOOD
+      - item;COBBLESTONE
 
   2:
     #Quantidade de blocos necessarios para upar para essa etapa.
