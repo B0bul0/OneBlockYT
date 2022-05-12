@@ -6,7 +6,11 @@ import me.bobulo.oneblock.breakblock.BreakBlock;
 import me.bobulo.oneblock.breakblock.action.DropItemBreakAction;
 import me.bobulo.oneblock.breakblock.action.SpawnMobBreakAction;
 import me.bobulo.oneblock.listener.BreakBlockListener;
+import me.bobulo.oneblock.listener.ConnectionListener;
+import me.bobulo.oneblock.phase.BlockPhase;
+import me.bobulo.oneblock.user.UserMap;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.EntityType;
@@ -24,9 +28,13 @@ public class OneBlock extends JavaPlugin {
     @Getter
     private Set<Block> oneBlocks;
 
+    @Getter
+    private UserMap userMap;
+
     @Override
     public void onEnable() {
         super.onEnable();
+        this.userMap = new UserMap();
         this.breakBlock = new BreakBlock();
         this.oneBlocks = Sets.newHashSet(Bukkit.getWorlds().get(0).getBlockAt(0, 80, 0));
 
@@ -35,10 +43,18 @@ public class OneBlock extends JavaPlugin {
             oneBlock.setType(Material.GRASS_BLOCK);
         }
 
-        registerEvents(new BreakBlockListener(this));
+        registerEvents(new BreakBlockListener(this), new ConnectionListener(this));
 
-        registerAllItens();
-        registerAllMobs();
+        BlockPhase blockPhase1 = new BlockPhase(1);
+        blockPhase1.addBreakAction(new DropItemBreakAction(1, new ItemStack(Material.ACACIA_WOOD)));
+
+        BlockPhase blockPhase2 = new BlockPhase(2, 5);
+
+        breakBlock.registerPhase(blockPhase1);
+        breakBlock.registerPhase(blockPhase2);
+
+        registerAllItens(2);
+        registerAllMobs(2);
 
         this.breakBlock.shuffle();
     }
@@ -51,7 +67,7 @@ public class OneBlock extends JavaPlugin {
         this.oneBlocks.clear();
     }
 
-    public void registerAllItens() {
+    public void registerAllItens(int phase) {
         // Registrar todos os itens do minecraft
 
         for (Material value : Material.values()) {
@@ -67,11 +83,11 @@ public class OneBlock extends JavaPlugin {
             ItemStack itemStack = new ItemStack(value);
 
             DropItemBreakAction action = new DropItemBreakAction(1, itemStack);
-            this.breakBlock.registerAction(action);
+            this.breakBlock.registerAction(phase, action);
         }
     }
 
-    public void registerAllMobs() {
+    public void registerAllMobs(int phase) {
 
         // Registrar todos os mobs do minecraft
 
@@ -82,7 +98,7 @@ public class OneBlock extends JavaPlugin {
                 continue;
 
             SpawnMobBreakAction action = new SpawnMobBreakAction(1, value);
-            this.breakBlock.registerAction(action);
+            this.breakBlock.registerAction(phase, action);
         }
     }
 

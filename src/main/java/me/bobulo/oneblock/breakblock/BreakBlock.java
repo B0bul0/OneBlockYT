@@ -1,46 +1,71 @@
 package me.bobulo.oneblock.breakblock;
 
-import com.google.common.collect.Lists;
 import lombok.NonNull;
 import me.bobulo.oneblock.breakblock.action.BreakAction;
 import me.bobulo.oneblock.breakblock.context.BreakContext;
 import me.bobulo.oneblock.event.BreakOneBlockEvent;
 import me.bobulo.oneblock.event.RegisterOneBlockEvent;
+import me.bobulo.oneblock.phase.BlockPhase;
+import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 
-import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class BreakBlock {
 
+    private final Map<Integer, BlockPhase> phasesActions = new HashMap<>();
 
-    private final List<BreakAction> breakActions = new CopyOnWriteArrayList<>();
+    public void registerAction(int phase, @NonNull BreakAction breakAction) {
+        Validate.isTrue(phase > 0, "A etapa não pode ser negativa: " + phase);
 
-    public void registerAction(@NonNull BreakAction breakAction) {
         RegisterOneBlockEvent event = new RegisterOneBlockEvent(breakAction);
         Bukkit.getPluginManager().callEvent(event);
 
         if (event.isCancelled())
             return;
 
-        breakActions.add(breakAction);
+        BlockPhase blockPhase = phasesActions.get(phase);
+
+        if (blockPhase == null) {
+            blockPhase = new BlockPhase(phase);
+            registerPhase(blockPhase);
+        }
+
+        blockPhase.addBreakAction(breakAction);
+    }
+
+    public void registerPhase(@NonNull BlockPhase blockPhase) {
+        Validate.isTrue(blockPhase.getPhase() > 0, "A etapa não pode ser negativa: " + blockPhase.getPhase());
+        Validate.isTrue(!this.phasesActions.containsKey(blockPhase.getPhase()), "Essa etapa já existe.");
+
+        this.phasesActions.put(blockPhase.getPhase(), blockPhase);
     }
 
     public void shuffle() {
-        Collections.shuffle(breakActions);
+        this.phasesActions.forEach((integer, breakActions) -> breakActions.shuffle());
     }
 
     public void unRegisterAll() {
-        this.breakActions.clear();
+        this.phasesActions.clear();
+    }
+
+    public BlockPhase getPhase(int phase) {
+        return this.phasesActions.get(phase);
     }
 
     @NonNull
-    public BreakAction getRandomBreakAction() {
-        if (breakActions.isEmpty())
-            throw new RuntimeException("Não tem valores na lista.");
+    public BreakAction getRandomBreakAction(int phase) {
+        BlockPhase blockPhase = this.phasesActions.get(phase);
+
+        if (blockPhase == null)
+            throw new RuntimeException("Essa etapa não existe.");
+
+        List<BreakAction> breakActions = blockPhase.getBreakActions();
 
         double size = 0;
 
@@ -49,8 +74,6 @@ public class BreakBlock {
         }
 
         double v = ThreadLocalRandom.current().nextDouble(0, size);
-
-        System.out.println(v);
 
         int value = 0;
         for (BreakAction breakAction : breakActions) {
@@ -64,7 +87,7 @@ public class BreakBlock {
     }
 
     public void randomAction(@NonNull BreakContext breakContext) {
-        BreakAction randomBreakAction = getRandomBreakAction();
+        BreakAction randomBreakAction = getRandomBreakAction(breakContext.getUser().getPhase());
 
         BreakOneBlockEvent event = new BreakOneBlockEvent(breakContext, randomBreakAction);
         Bukkit.getPluginManager().callEvent(event);

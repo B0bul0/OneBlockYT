@@ -2,6 +2,7 @@ package me.bobulo.oneblock.breakblock.context;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import me.bobulo.oneblock.user.User;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 
@@ -9,7 +10,11 @@ import org.bukkit.entity.Player;
 @AllArgsConstructor
 public class BreakContext {
 
-    private Player player;
+    private User user;
     private Block block;
+
+    public Player getPlayer() {
+        return user.getPlayer();
+    }
 
 }
