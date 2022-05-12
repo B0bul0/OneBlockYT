@@ -87,7 +87,7 @@ public class OneBlock extends JavaPlugin {
                 continue;
 
             int phase = i;
-            int blocksNeeded = section.getInt("blocksNeeded", 0);
+            int blocksNeeded = section.getInt("blocksNeeded");
             List<String> drops = section.getStringList("drops");
 
             BlockPhase blockPhase = new BlockPhase(phase, blocksNeeded);

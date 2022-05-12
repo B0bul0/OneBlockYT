@@ -45,7 +45,7 @@ public class BreakBlock {
         Validate.isTrue(!this.phasesActions.containsKey(blockPhase.getPhase()), "Essa etapa já existe.");
 
         this.phasesActions.put(blockPhase.getPhase(), blockPhase);
-        OneBlock.getInstance().getLogger().info("Registrando etapa " + blockPhase.getPhase());
+        OneBlock.getInstance().getLogger().info("Registrando etapa " + blockPhase.getPhase() + " (" + blockPhase.getBlocksNeeded() + ")");
     }
 
     public void shuffle() {
