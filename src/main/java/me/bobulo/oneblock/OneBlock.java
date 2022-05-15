@@ -3,6 +3,7 @@ package me.bobulo.oneblock;
 import com.google.common.collect.Sets;
 import lombok.Getter;
 import me.bobulo.oneblock.breakblock.BreakBlock;
+import me.bobulo.oneblock.breakblock.action.ConsumerBreakAction;
 import me.bobulo.oneblock.breakblock.action.DropItemBreakAction;
 import me.bobulo.oneblock.breakblock.action.SpawnMobBreakAction;
 import me.bobulo.oneblock.listener.BreakBlockListener;
@@ -29,6 +30,7 @@ import java.util.Set;
 
 public class OneBlock extends JavaPlugin {
 
+    private static OneBlock instance;
     @Getter
     private BreakBlock breakBlock;
 
@@ -40,6 +42,7 @@ public class OneBlock extends JavaPlugin {
 
     @Override
     public void onLoad() {
+        this.instance = this;
         saveDefaultConfig();
     }
 
@@ -165,15 +168,13 @@ public class OneBlock extends JavaPlugin {
         }
     }
 
-
     private void registerEvents(Listener... listeners) {
         for (Listener listener : listeners) {
             Bukkit.getPluginManager().registerEvents(listener, this);
         }
     }
-
     public static OneBlock getInstance() {
-        return getPlugin(OneBlock.class);
+        return instance;
     }
 
 }
