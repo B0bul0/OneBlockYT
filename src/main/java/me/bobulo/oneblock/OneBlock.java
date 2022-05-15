@@ -1,9 +1,7 @@
 package me.bobulo.oneblock;
 
-import com.google.common.collect.Sets;
 import lombok.Getter;
 import me.bobulo.oneblock.breakblock.BreakBlock;
-import me.bobulo.oneblock.breakblock.action.ConsumerBreakAction;
 import me.bobulo.oneblock.breakblock.action.DropItemBreakAction;
 import me.bobulo.oneblock.breakblock.action.SpawnMobBreakAction;
 import me.bobulo.oneblock.listener.BreakBlockListener;
@@ -25,7 +23,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 public class OneBlock extends JavaPlugin {
@@ -42,16 +39,17 @@ public class OneBlock extends JavaPlugin {
 
     @Override
     public void onLoad() {
-        this.instance = this;
+        instance = this;
+
+        this.userMap = new UserMap();
+        this.breakBlock = new BreakBlock();
+        this.oneBlocks = new HashSet<>();
+
         saveDefaultConfig();
     }
 
     @Override
     public void onEnable() {
-        this.userMap = new UserMap();
-        this.breakBlock = new BreakBlock();
-        this.oneBlocks = new HashSet<>();
-
         List<String> locations = getConfig().getStringList("locations");
 
         for (String text : locations) {
