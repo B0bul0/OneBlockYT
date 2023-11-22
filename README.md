@@ -1,2 +1,2 @@
 # OneBlockYT
-Um plugin de OneBlock Simples para gravação
+Um plugin simples do Bukkit para OneBlock, voltado para gravação de vídeos.
